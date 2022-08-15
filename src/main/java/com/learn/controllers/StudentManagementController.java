@@ -33,9 +33,17 @@ public class StudentManagementController {
     public void deleteStudent(@PathVariable Integer studentId){
         System.out.println(studentId);
     }
-
     @PutMapping(path = "{studentId}")
     public void updateStudent(@PathVariable Integer studentId, @RequestBody Student student){
         System.out.println(String.format("%s  %s",student,student));
+    }
+
+    @GetMapping(path = "/{id}")
+    @PreAuthorize("hasAuthority('student:write')")
+    public Student getUser(@PathVariable("id") long id){
+        return STUDENTS.stream()
+                .filter(user->user.getId()==id)
+                .findFirst()
+                .orElseThrow(()->new IllegalStateException("User "+id));
     }
 }
